@@ -1,11 +1,11 @@
 extends Panel
 
 
-onready var _refrence_button = $ReferenceButton;
-onready var _container_letters = $Container_Letters
-onready var _container_symbols = $Container_Symbols
+@onready var _refrence_button = $ReferenceButton;
+@onready var _container_letters = $Container_Letters
+@onready var _container_symbols = $Container_Symbols
 
-export var allow_newline = false;
+@export var allow_newline = false;
 
 const B_SIZE = 48;
 
@@ -48,39 +48,39 @@ func _toggle_symbols(show_symbols):
 		_container_symbols.visible = false;
 
 func _create_input_event(b, pressed):
-	var scancode = 0;
+	var keycode = 0;
 	var key = b.text;
 	var unicode = 0;
 
 	if (b == _toggle_symbols_button):
-		_toggle_symbols(b.pressed);
+		_toggle_symbols(b.button_pressed);
 		return;
 	elif (b == _cancel_button):
 		if (!pressed): emit_signal("cancel_pressed");
 		return;
 	elif (b == _shift_button):
 		if (pressed): 
-			_toggle_case(!b.pressed); # button event is created before it is actually toggled
-		scancode = KEY_SHIFT;
+			_toggle_case(!b.button_pressed); # button event is created before it is actually toggled
+		keycode = KEY_SHIFT;
 	elif (b == _backspace_button):
-		scancode = KEY_BACKSPACE;
+		keycode = KEY_BACKSPACE;
 	elif (b == _enter_button):
-		scancode = KEY_ENTER;
+		keycode = KEY_ENTER;
 		if (!pressed): emit_signal("enter_pressed");
 		if (!allow_newline): return; # no key event for enter in this case
 	elif (b == _space_button):
-		scancode = KEY_SPACE;
+		keycode = KEY_SPACE;
 		key = " ";
-		unicode = " ".ord_at(0);
+		unicode = " ".unicode_at(0);
 	else:
-		scancode = OS.find_scancode_from_string(b.text);
-		unicode = key.ord_at(0);
+		keycode = OS.find_keycode_from_string(b.text);
+		unicode = key.unicode_at(0);
 	
 
 	#print("  Event for " + key + ": scancode = " + str(scancode));
 	
 	var ev = InputEventKey.new();
-	ev.scancode = scancode;
+	ev.keycode = keycode;
 	ev.unicode = unicode;
 	ev.pressed = pressed;
 
@@ -97,7 +97,7 @@ func _on_button_down(b):
 	
 	var ev = _create_input_event(b, true);
 	if (!ev): return;
-	get_tree().input_event(ev);
+	Input.parse_input_event(ev);
 
 
 func _on_button_up(b):
@@ -105,7 +105,7 @@ func _on_button_up(b):
 	
 	var ev = _create_input_event(b, false);
 	if (!ev): return;
-	get_tree().input_event(ev);
+	Input.parse_input_event(ev);
 
 
 func _create_button(_parent, text, x, y, w = 1, h = 1):
@@ -113,17 +113,17 @@ func _create_button(_parent, text, x, y, w = 1, h = 1):
 	b.text = text;
 	
 	if (b.text.length() == 1):
-		var c = b.text.ord_at(0);
+		var c = b.text.unicode_at(0);
 		if (c >= 97 && c <= 122):
 			_all_letter_buttons.append(b);
 	
-	b.rect_position = Vector2(x, y) * B_SIZE;
-	b.rect_min_size = Vector2(w, h) * B_SIZE;
+	b.position = Vector2(x, y) * B_SIZE;
+	b.custom_minimum_size = Vector2(w, h) * B_SIZE;
 	
 	b.name = "button_"+text;
 	
-	b.connect("button_down", self, "_on_button_down", [b]);
-	b.connect("button_up", self, "_on_button_up", [b]);
+	b.connect("button_down", _on_button_down.bind(b));
+	b.connect("button_up", _on_button_up.bind(b));
 	
 	_parent.add_child(b);
 	return b;
@@ -137,16 +137,16 @@ var _cancel_button : Button = null;
 
 func _create_keyboard_buttons():
 	_toggle_symbols_button = _create_button(self, "#$%", 0+1, 1, 2, 1);
-	_toggle_symbols_button.set_rotation(deg2rad(90.0));
+	_toggle_symbols_button.set_rotation(deg_to_rad(90.0));
 	_toggle_symbols_button.toggle_mode = true;
 	
 	_shift_button = _create_button(self, "Δ", 0, 3, 1, 2);
 	_shift_button.toggle_mode = true;
 	
 	_backspace_button = _create_button(self, "BckSp.", 11+1, 1, 2, 1);
-	_backspace_button.set_rotation(deg2rad(90.0));
+	_backspace_button.set_rotation(deg_to_rad(90.0));
 	_enter_button = _create_button(self, "Enter", 11+1, 3, 2, 1);
-	_enter_button.set_rotation(deg2rad(90.0));
+	_enter_button.set_rotation(deg_to_rad(90.0));
 	
 	_space_button = _create_button(self, "Space", 2, 4, 9, 1);
 
@@ -185,8 +185,17 @@ func _create_keyboard_buttons():
 	_refrence_button.visible = false;
 	_toggle_symbols(_toggle_symbols_button.pressed);
 
+func set_cancelable(cancelable):
+	if _cancel_button != null:
+		_cancel_button.visible = cancelable
 
+func enter_button_disabled(disabled):
+	if _enter_button != null:
+		_enter_button.disabled = disabled
+		
+func set_upper_case(upper_case):
+	_toggle_case(upper_case)
 
 func _ready():
 	_create_keyboard_buttons();
-	pass # Replace with function body.
+	_toggle_symbols(false)

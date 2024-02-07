@@ -1,33 +1,36 @@
-tool
-extends Spatial
+@tool
+extends Node3D
+class_name OQ_UI2DCanvas
 
 var ui_control : Control = null;
 
-onready var viewport = $Viewport;
-onready var ui_area = $UIArea;
+@onready var viewport = $SubViewport;
+@onready var ui_area = $UIArea;
 var ui_collisionshape = null;
 
-export var editor_live_update := false;
+@export var editor_live_update := false;
 
-export var transparent := false;
+@export var transparent := false;
 
 # set to true to prevent UIRayCast marker from colliding with canvas
-export var disable_collision := false;
+@export var disable_collision := false;
+@export var update_only_on_input := false;
 
 var mesh_material = null;
-onready var mesh_instance : MeshInstance = $UIArea/UIMeshInstance
+@onready var mesh_instance : MeshInstance3D = $UIArea/UIMeshInstance
 
 
 var ui_size = Vector2();
 
-func _get_configuration_warning():
+func _get_configuration_warnings():
 	if (ui_control == null): return "Need a Control node as child."
 	return '';
 
 
 func _input(event):
 	if (event is InputEventKey):
-		viewport.input(event);
+		viewport.push_input(event);
+		_input_update()
 
 
 func find_child_control():
@@ -45,14 +48,25 @@ func update_size():
 	if (viewport != null):
 		viewport.set_size(ui_size);
 
+func _hide():
+	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	hide()
+func _show():
+	if !update_only_on_input:
+		viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_PARENT_VISIBLE
+	else:
+		viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+		_input_update()
+	show()
 
 func _ready():
 	
-	mesh_material = mesh_instance.mesh.surface_get_material(0);
+	mesh_material = mesh_instance.material_override;
+	mesh_material.albedo_texture = viewport.get_texture()
 	# only enable transparency when necessary as it is significantly slower than non-transparent rendering
 	mesh_material.flags_transparent = transparent;
 	
-	if Engine.editor_hint:
+	if Engine.is_editor_hint():
 		return;
 
 	find_child_control();
@@ -72,7 +86,7 @@ func _ready():
 	
 	
 func _editor_update_preview():
-	var preview_node = ui_control.duplicate(DUPLICATE_USE_INSTANCING);
+	var preview_node = ui_control.duplicate(DUPLICATE_USE_INSTANTIATION);
 	preview_node.visible = true;
 	
 	for c in viewport.get_children():
@@ -81,16 +95,21 @@ func _editor_update_preview():
 	
 	viewport.add_child(preview_node);
 
+func _input_update():
+	if update_only_on_input:
+		$update_once.update_once(viewport)
+	else:
+		viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_PARENT_VISIBLE
 
 func _process(_dt):
-	if !Engine.editor_hint: # not in edtior
+	
+	if !Engine.is_editor_hint(): # not in edtior
 		if disable_collision:
 			ui_collisionshape.disabled = true;
 		else:
 			# if we are invisible we need to disable the collision shape to avoid interaction with the UIRayCast
 			ui_collisionshape.disabled = not is_visible_in_tree()
 		return;
-		
 
 	# Not sure if it is a good idea to do this in the _process but at the moment it seems to 
 	# be the easiest to show the actual canvas size inside the editor
