@@ -1,23 +1,23 @@
 # This file contains the main game logic for the BeepSaber demo implementation
 #
-extends Spatial
+extends Node3D
 
-onready var left_controller := $OQ_ARVROrigin/OQ_LeftController;
-onready var right_controller := $OQ_ARVROrigin/OQ_RightController;
+@onready var left_controller := $OQ_ARVROrigin/OQ_LeftController;
+@onready var right_controller := $OQ_ARVROrigin/OQ_RightController;
 
-onready var left_saber = $OQ_ARVROrigin/OQ_LeftController/LeftLightSaber;
-onready var right_saber = $OQ_ARVROrigin/OQ_RightController/RightLightSaber;
+@onready var left_saber = $OQ_ARVROrigin/OQ_LeftController/LeftLightSaber;
+@onready var right_saber = $OQ_ARVROrigin/OQ_RightController/RightLightSaber;
 
-onready var ui_raycast = $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
+@onready var ui_raycast = $OQ_ARVROrigin/OQ_RightController/Feature_UIRayCast;
 
-onready var cube_template = preload("res://demo_games/BeepSaber/BeepCube.tscn").instance();
+@onready var cube_template = preload("res://demo_games/BeepSaber/BeepCube.tscn").instantiate();
 
 var cube_left = null
 var cube_right = null
 
-onready var track = $Track;
+@onready var track = $Track;
 
-onready var song_player := $SongPlayer;
+@onready var song_player := $SongPlayer;
 
 const COLOR_LEFT := Color(1.0, 0.1, 0.1, 1.0);
 const COLOR_RIGHT := Color(0.1, 0.1, 1.0, 1.0);
@@ -117,7 +117,7 @@ func _spawn_cube(note, current_beat):
 	var line = -(CUBE_DISTANCE * 3.0 / 2.0) + note._lineIndex * CUBE_DISTANCE;
 	var layer = CUBE_DISTANCE + note._lineLayer * CUBE_DISTANCE;
 
-	var rotation = deg2rad(CUBE_ROTATIONS[note._cutDirection]);
+	var rotation = deg_to_rad(CUBE_ROTATIONS[note._cutDirection]);
 
 	var distance = note._time - current_beat;
 
@@ -161,13 +161,13 @@ var _controller_movement_aabb = [
 	AABB(), AABB(), AABB()
 ]
 
-func _update_controller_movement_aabb(controller : ARVRController):
+func _update_controller_movement_aabb(controller : XRController3D):
 	var id = controller.controller_id
 	var aabb = _controller_movement_aabb[id].expand(controller.global_transform.origin);
 	_controller_movement_aabb[id] = aabb;
 
 
-func _check_and_update_saber(controller : ARVRController, saber: Area):
+func _check_and_update_saber(controller : XRController3D, saber: Area3D):
 	# to allow extending/sheething the saber while not playing a song
 	if (!song_player.playing):
 		if (controller._button_just_pressed(vr.CONTROLLER_BUTTON.XA) ||
@@ -215,9 +215,9 @@ func _update_level(dt):
 	for i in range(1,VU_COUNT+1):
 		var hz = i * FREQ_MAX / VU_COUNT;
 		var f = _spectrum.get_magnitude_for_frequency_range(prev_hz,hz)
-		var energy = clamp((MIN_DB + linear2db(f.length()))/MIN_DB,0,1)
+		var energy = clamp((MIN_DB + linear_to_db(f.length()))/MIN_DB,0,1)
 
-		_spectrum_nodes[i-1].translation.y = energy * 10.0;
+		_spectrum_nodes[i-1].position.y = energy * 10.0;
 
 		prev_hz = hz
 
@@ -233,12 +233,12 @@ func _setup_level():
 	for  i in range(0, 7):
 		s = s.duplicate()
 		$Level.add_child(s);
-		s.translation.x += 2.0;
+		s.position.x += 2.0;
 		_spectrum_nodes.push_back(s);
 
 
 func _ready():
-	_main_menu = $MainMenu_OQ_UI2DCanvas.find_node("BeepSaberMainMenu", true, false);
+	_main_menu = $MainMenu_OQ_UI2DCanvas.find_child("BeepSaberMainMenu", true, false);
 	_main_menu.initialize(self);
 
 	cube_left = cube_template.duplicate();
@@ -246,9 +246,9 @@ func _ready():
 	cube_left.duplicate_create(COLOR_LEFT);
 	cube_right.duplicate_create(COLOR_RIGHT);
 
-	left_saber._mat.set_shader_param("color", COLOR_LEFT);
+	left_saber._mat.set_shader_parameter("color", COLOR_LEFT);
 	left_saber.type = 0;
-	right_saber._mat.set_shader_param("color", COLOR_RIGHT);
+	right_saber._mat.set_shader_parameter("color", COLOR_RIGHT);
 	right_saber.type = 1;
 
 	# This is a workaround for now to orient correctly for the Vive controllers
@@ -264,17 +264,17 @@ func _ready():
 
 # cut the cube by creating two rigid bodies and using a CSGBox to create
 # the cut plane
-func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distance, controller_speed):
-	var rigid_body_half = RigidBody.new();
+func _create_cut_rigid_body(_sign, cube : Node3D, cutplane : Plane, cut_distance, controller_speed):
+	var rigid_body_half = RigidBody3D.new();
 	
 	# the original cube mesh
-	var csg_cube = CSGMesh.new();
+	var csg_cube = CSGMesh3D.new();
 	csg_cube.mesh = cube._mesh;
 	csg_cube.transform = cube._cube_mesh_orientation.transform;
 	
 	# using a box to cut away part of the mesh
-	var csg_cut = CSGBox.new();
-	csg_cut.operation = CSGShape.OPERATION_SUBTRACTION;
+	var csg_cut = CSGBox3D.new();
+	csg_cut.operation = CSGShape3D.OPERATION_SUBTRACTION;
 	csg_cut.material = load("res://demo_games/BeepSaber/BeepCube_Cut.material");
 	csg_cut.width = 1; csg_cut.height = 1;csg_cut.depth = 1;
 
@@ -286,8 +286,8 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 	# Next we are adding a simple collision cube to the rigid body. Note that
 	# his is really just a very crude approximation of the actual cut geometry
 	# but for now it's enough to give them some physics behaviour
-	var coll = CollisionShape.new();
-	coll.shape = BoxShape.new();
+	var coll = CollisionShape3D.new();
+	coll.shape = BoxShape3D.new();
 	coll.shape.extents = Vector3(0.25, 0.25, 0.125);
 	coll.look_at_from_position(-cutplane.normal*_sign*0.125, cutplane.normal, Vector3(0,1,0));
 	rigid_body_half.add_child(coll);
@@ -312,7 +312,7 @@ func _create_cut_rigid_body(_sign, cube : Spatial, cutplane : Plane, cut_distanc
 
 	# delete the rigid body after 2 seconds; this only works here because we are
 	# at the end of this function and do not need the rigid body for anything else
-	yield(get_tree().create_timer(2.0), "timeout")
+	await get_tree().create_timer(2.0).timeout
 	rigid_body_half.queue_free()
 
 
@@ -354,7 +354,7 @@ func _display_points():
 	$Multiplier_Label.set_label_text("x %d\nCombo %d" %[_current_multiplier, _current_combo])
 
 # perform the necessay computations to cut a cube with the saber
-func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
+func _cut_cube(controller : XRController3D, saber : Area3D, cube : Node3D):
 	# perform haptic feedback for the cut
 	controller.simple_rumble(0.75, 0.1);
 	
@@ -393,11 +393,11 @@ func _cut_cube(controller : ARVRController, saber : Area, cube : Spatial):
 	cube.queue_free();
 
 
-func _on_LeftLightSaber_area_entered(area : Area):
+func _on_LeftLightSaber_area_entered(area : Area3D):
 	if (area.is_in_group("beepcube")):
 		_cut_cube(left_controller, left_saber, area.get_parent().get_parent());
 
 
-func _on_RightLightSaber_area_entered(area : Area):
+func _on_RightLightSaber_area_entered(area : Area3D):
 	if (area.is_in_group("beepcube")):
 		_cut_cube(right_controller, right_saber, area.get_parent().get_parent());

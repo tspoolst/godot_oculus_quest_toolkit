@@ -1,11 +1,11 @@
 # The lightsaber logic is mostly contained in the BeepSaber_Game.gd
 # here I only track the extended/sheethed state and provide helper functions to
 # trigger the necessary animations
-extends Area
+extends Area3D
 
 # store the saber material in a variable so the main game can set the color on initialize
-onready var _mat : ShaderMaterial = $LightSaber_Mesh.mesh.surface_get_material(0);
-onready var _anim := $AnimationPlayer;
+@onready var _mat : ShaderMaterial = $LightSaber_Mesh.mesh.surface_get_material(0);
+@onready var _anim := $AnimationPlayer;
 
 # the type of note this saber can cut (set in the game main)
 var type = 0;
@@ -16,7 +16,7 @@ func show():
 
 
 func is_extended():
-	return $LightSaber_Mesh.translation.y > 0.1;
+	return $LightSaber_Mesh.position.y > 0.1;
 
 
 func hide():

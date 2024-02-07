@@ -2,18 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xowwicknitui"
-path.s3tc="res://.godot/imported/OculusQuestTouchController_Left_Reactive_OculusQuestTouchControllerTexture_Color.png-59ddc4de94fcdc1eeb243d2760b3fa3a.s3tc.ctex"
+uid="uid://dqsjdr23k8wut"
+path.s3tc="res://.godot/imported/Material_2_baseColor.png-63cd6612e2e06219ad6a6a55dcd7370a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
-generator_parameters={}
 
 [deps]
 
-source_file="res://OQ_Toolkit/OQ_ARVRController/models3d/OculusQuestTouchController_Left_Reactive_OculusQuestTouchControllerTexture_Color.png"
-dest_files=["res://.godot/imported/OculusQuestTouchController_Left_Reactive_OculusQuestTouchControllerTexture_Color.png-59ddc4de94fcdc1eeb243d2760b3fa3a.s3tc.ctex"]
+source_file="res://demo_scenes/data/models_3d/medieval_weapons_pack/textures/Material_2_baseColor.png"
+dest_files=["res://.godot/imported/Material_2_baseColor.png-63cd6612e2e06219ad6a6a55dcd7370a.s3tc.ctex"]
 
 [params]
 

@@ -1,6 +1,6 @@
-extends Spatial
+extends Node3D
 
-onready var info_label = $OQ_ARVROrigin/OQ_LeftController/OQ_VisibilityToggle/OQ_UILabel;
+@onready var info_label = $OQ_ARVROrigin/OQ_LeftController/OQ_VisibilityToggle/OQ_UILabel;
 
 func _ready():
 	pass;
@@ -12,6 +12,6 @@ func _physics_process(_dt):
 
 
 func _process(_dt):
-	info_label.set_label_text("%.2f %.2f %.2f" % [vr.vrOrigin.translation.x, vr.vrOrigin.translation.y, vr.vrOrigin.translation.z]);
+	info_label.set_label_text("%.2f %.2f %.2f" % [vr.vrOrigin.position.x, vr.vrOrigin.position.y, vr.vrOrigin.position.z]);
 	
 	

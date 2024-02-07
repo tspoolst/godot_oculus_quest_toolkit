@@ -1,6 +1,6 @@
-extends Spatial
+extends Node3D
 
-onready var bow = get_parent();
+@onready var bow = get_parent();
 
 func oq_can_area_object_grab(controller):
 	print("BowStringGrab");

@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://18wlatsxopyq"
 path.s3tc="res://.godot/imported/OculusQuestTouchController_Left_OculusQuestTouchControllerTexture.png-b1da787cf72713567e56484b83585aa6.s3tc.ctex"
-path.etc2="res://.godot/imported/OculusQuestTouchController_Left_OculusQuestTouchControllerTexture.png-b1da787cf72713567e56484b83585aa6.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={}
@@ -14,7 +13,7 @@ generator_parameters={}
 [deps]
 
 source_file="res://OQ_Toolkit/OQ_ARVRController/models3d/OculusQuestTouchController_Left_OculusQuestTouchControllerTexture.png"
-dest_files=["res://.godot/imported/OculusQuestTouchController_Left_OculusQuestTouchControllerTexture.png-b1da787cf72713567e56484b83585aa6.s3tc.ctex", "res://.godot/imported/OculusQuestTouchController_Left_OculusQuestTouchControllerTexture.png-b1da787cf72713567e56484b83585aa6.etc2.ctex"]
+dest_files=["res://.godot/imported/OculusQuestTouchController_Left_OculusQuestTouchControllerTexture.png-b1da787cf72713567e56484b83585aa6.s3tc.ctex"]
 
 [params]
 

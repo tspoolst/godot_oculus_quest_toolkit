@@ -1,6 +1,6 @@
-extends Spatial
+extends Node3D
 
-export var physicsOn = true
+@export var physicsOn = true
 
 
 # Called when the node enters the scene tree for the first time.
@@ -17,9 +17,9 @@ func _updatePhysicsOn():
 	var oldMode = $GrabbableFrameBody.mode
 	var neededMode = null
 	if physicsOn:
-		neededMode = RigidBody.MODE_RIGID
+		neededMode = RigidBody3D.MODE_RIGID
 	else:
-		neededMode = RigidBody.MODE_KINEMATIC
+		neededMode = RigidBody3D.FREEZE_MODE_KINEMATIC
 	if oldMode != neededMode:
 		$GrabbableFrameFlexiBody.mode = neededMode
 		

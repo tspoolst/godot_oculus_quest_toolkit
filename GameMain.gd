@@ -23,7 +23,7 @@ func _ready():
 	
 	# This is required for WebXR support to wait until the user pressed the button
 	# the buttons itself are created inside the vr.initialize();
-	if (vr.arvr_webxr_interface): yield(vr, "signal_webxr_started");
+	if (vr.arvr_webxr_interface): await vr.signal_webxr_started;
 	
 	# Always advertise Godot a bit in the beginning
 	if (vr.inVR): vr.switch_scene("res://demo_scenes/GodotSplash.tscn", 0.0, 0.0);

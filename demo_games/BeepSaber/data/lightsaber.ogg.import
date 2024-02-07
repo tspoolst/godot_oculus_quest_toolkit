@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/lightsaber.ogg-3a6f9fc125dac9ea7996991a3f7fd514.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bfxvooggaipva"
+path="res://.godot/imported/lightsaber.ogg-3a6f9fc125dac9ea7996991a3f7fd514.oggvorbisstr"
 
 [deps]
 
 source_file="res://demo_games/BeepSaber/data/lightsaber.ogg"
-dest_files=[ "res://.import/lightsaber.ogg-3a6f9fc125dac9ea7996991a3f7fd514.oggstr" ]
+dest_files=["res://.godot/imported/lightsaber.ogg-3a6f9fc125dac9ea7996991a3f7fd514.oggvorbisstr"]
 
 [params]
 
 loop=false
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

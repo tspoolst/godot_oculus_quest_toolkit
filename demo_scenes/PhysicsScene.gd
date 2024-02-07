@@ -1,8 +1,8 @@
-extends Spatial
+extends Node3D
 
 const info_text = """Physics Demo Room
 
-Right Controller uses GrabType == HingeJoint
+Right Controller uses GrabType == HingeJoint3D
 Left Controller uses GrabType == Velocity + Reparent Mesh
 """
 

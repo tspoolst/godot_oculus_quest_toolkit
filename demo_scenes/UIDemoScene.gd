@@ -1,6 +1,6 @@
-extends Spatial
+extends Node3D
 
-onready var locomotion_stick = $OQ_ARVROrigin/Locomotion_Stick;
+@onready var locomotion_stick = $OQ_ARVROrigin/Locomotion_Stick;
 
 # Some introductory text shown on an info label
 var info_text = """Welcome to the Godot Oculus Quest Toolkit Demo!
@@ -17,10 +17,10 @@ to return here.
 
 func setup_movement_options_ui():
 	var movement_options_root = $OQ_UI2DCanvas_MovementOptions;
-	var move_speed_spinbox : SpinBox = movement_options_root.find_node("MoveSpeedSpinBox", true, false);
-	var rotate_speed_spinbox : SpinBox = movement_options_root.find_node("RotateSpeedSpinBox", true, false);
-	var rotation_optionbutton : OptionButton = movement_options_root.find_node("RotationOptionButton", true, false);
-	var click_turn_angle_spinbox : SpinBox = movement_options_root.find_node("ClickTurnAngleSpinBox", true, false);
+	var move_speed_spinbox : SpinBox = movement_options_root.find_child("MoveSpeedSpinBox", true, false);
+	var rotate_speed_spinbox : SpinBox = movement_options_root.find_child("RotateSpeedSpinBox", true, false);
+	var rotation_optionbutton : OptionButton = movement_options_root.find_child("RotationOptionButton", true, false);
+	var click_turn_angle_spinbox : SpinBox = movement_options_root.find_child("ClickTurnAngleSpinBox", true, false);
 
 	move_speed_spinbox.value = locomotion_stick.move_speed;
 	rotate_speed_spinbox.value = locomotion_stick.smooth_turn_speed;
@@ -38,7 +38,7 @@ func _ready():
 	setup_movement_options_ui();
 	$InfoLabel.set_label_text(info_text);
 	
-	$OQ_UI2DKeyboard.connect("text_input_enter", self, "_on_text_enter");
+	$OQ_UI2DKeyboard.connect("text_input_enter", Callable(self, "_on_text_enter"));
 	
 
 func _on_MoveSpeedSpinBox_value_changed(value):

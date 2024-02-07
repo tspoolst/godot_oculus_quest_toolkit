@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 
 const INFO_TEXT = """Jog in place to move in this demo.
 

@@ -20,7 +20,7 @@ func ui_raycast_hit_event(position, click, release):
 
 	if (click || release):
 		var e = InputEventMouseButton.new();
-		e.pressed = click;
+		e.button_pressed = click;
 		e.button_index = MOUSE_BUTTON_LEFT;
 		e.position = pos2d;
 		e.global_position = pos2d;

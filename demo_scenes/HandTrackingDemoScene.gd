@@ -1,6 +1,6 @@
-extends Spatial
+extends Node3D
 
-onready var label_gesture = $Label_SimpleGesture;
+@onready var label_gesture = $Label_SimpleGesture;
 
 func _physics_process(_dt):
 	if (vr.button_just_pressed(vr.BUTTON.ENTER)): # switch back to main menu

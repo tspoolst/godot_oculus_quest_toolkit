@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 
 func _ready():
 	#$"Racket/Racket-col".mass = 1.0;

@@ -9,7 +9,7 @@
 [ext_resource path="res://OQ_Toolkit/OQ_ARVRController/Feature_AreaObjectGrab.tscn" type="PackedScene" id=7]
 [ext_resource path="res://OQ_Toolkit/OQ_ARVROrigin/Feature_VRSimulator.tscn" type="PackedScene" id=8]
 
-[node name="BowAndArrow" type="Spatial"]
+[node name="BowAndArrow" type="Node3D"]
 
 [node name="OQ_ARVROrigin" parent="." instance=ExtResource( 4 )]
 
@@ -26,12 +26,12 @@
 [node name="Feature_AreaObjectGrab" parent="OQ_ARVROrigin/OQ_RightController" instance=ExtResource( 7 )]
 
 [node name="OQ_BowAndArrow" parent="." instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0547019, 1.44647, -0.447572 )
+transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0547019, 1.44647, -0.447572 )
 
-[node name="Bow" type="Spatial" parent="OQ_BowAndArrow"]
-transform = Transform( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, 0, 0, 0 )
+[node name="Bow" type="Node3D" parent="OQ_BowAndArrow"]
+transform = Transform3D( -1.62921e-07, 0, -1, 0, 1, 0, 1, 0, -1.62921e-07, 0, 0, 0 )
 
-[node name="bow_Material 2_0" type="MeshInstance" parent="OQ_BowAndArrow/Bow"]
-transform = Transform( -8.74228e-10, -0.02, 0, 0.02, -8.74228e-10, 0, 0, 0, 0.05, 0.0360692, 0, 0 )
+[node name="bow_Material 2_0" type="MeshInstance3D" parent="OQ_BowAndArrow/Bow"]
+transform = Transform3D( -8.74228e-10, -0.02, 0, 0.02, -8.74228e-10, 0, 0, 0, 0.05, 0.0360692, 0, 0 )
 mesh = ExtResource( 5 )
 material/0 = null

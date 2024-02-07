@@ -1,18 +1,18 @@
 # BeepCube is the standard cube that will get cut by the sabers
-extends Spatial
+extends Node3D
 
 var _note;
 
 # the animation player contains the span animation that is applied to the CubeMeshAnimation node
-onready var _anim = $CubeMeshOrientation/CubeMeshAnimation/AnimationPlayer;
+@onready var _anim = $CubeMeshOrientation/CubeMeshAnimation/AnimationPlayer;
 # this is a separate Spatial for the orientation used in the game to display the cut direction
-onready var _cube_mesh_orientation : Spatial = $CubeMeshOrientation;
-onready var _mesh_instance : MeshInstance = $CubeMeshOrientation/CubeMeshAnimation/BeepCube_Mesh;
+@onready var _cube_mesh_orientation : Node3D = $CubeMeshOrientation;
+@onready var _mesh_instance : MeshInstance3D = $CubeMeshOrientation/CubeMeshAnimation/BeepCube_Mesh;
 
 # we store the mesh here as part of the BeepCube for easier access because we will
 # reuse it when we create the cut cube pieces
 var _mesh : Mesh = null;
-var _mat : SpatialMaterial = null;
+var _mat : StandardMaterial3D = null;
 
 func _ready():
 	_mesh = _mesh_instance.mesh;

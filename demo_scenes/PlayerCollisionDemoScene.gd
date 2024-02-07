@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 
 
 func _physics_process(_dt):
